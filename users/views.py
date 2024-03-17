@@ -17,7 +17,12 @@ def profile_view(request):
 @csrf_exempt
 def login_view(request):
     if request.method == 'GET':
+
+        if request.user.is_authenticated:
+            return redirect('/users/profile')
+
         return render(request, 'login.html')
+
     elif request.method == 'POST':
         if request.path == '/users/login':
             username = request.POST.get('username')
@@ -37,7 +42,11 @@ def login_view(request):
 @csrf_exempt
 def register_view(request):
     if request.method == 'GET':
+        if request.user.is_authenticated:
+            return redirect('/users/profile')
+
         return render(request, 'register.html')
+
     elif request.method == 'POST':
         if request.path == '/users/register':
             username = request.POST.get('username')
@@ -51,9 +60,8 @@ def register_view(request):
                 user.save()
 
                 connection.cursor().execute(
-                    "INSERT INTO player_info (username) VALUES ('{}');".format(
-                        username
-                    )
+                    "INSERT INTO player_info (username) VALUES (%s);",
+                    (username,)
                 )
 
                 messages.info(request, 'Register user successfully!')
