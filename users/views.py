@@ -1,15 +1,41 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+import hashlib
 
 
-def login(request):
-    return render(request, 'login.html')
+@login_required
+def profile_view(request):
+    if request.method == 'GET':
+        return render(request, 'profile.html')
 
 
 @csrf_exempt
-def register(request):
+def login_view(request):
+    if request.method == 'GET':
+        return render(request, 'login.html')
+    elif request.method == 'POST':
+        if request.path == '/users/login':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect('/users/profile')
+            else:
+                messages.info(
+                    request, 'Wrong username or password!')
+                return render(request, 'login.html')
+
+
+@csrf_exempt
+def register_view(request):
     if request.method == 'GET':
         return render(request, 'register.html')
     elif request.method == 'POST':
@@ -17,19 +43,15 @@ def register(request):
             username = request.POST.get('username')
             email = request.POST.get('email')
             password = request.POST.get('password')
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT * FROM player WHERE username = '{}';".format(username))
-                rows = cursor.fetchall()
-                if len(rows) == 0:
-                    cursor.execute(
-                        "INSERT INTO player (username, hash_password, email) VALUES ('{}','{}','{}');".format(
-                            username, password, email
-                        )
-                    )
-                    messages.info(request, 'Register user successfully!')
-                    return render(request, 'login.html')
-                else:
-                    messages.info(
-                        request, 'Username is already exsit!')
-                    return render(request, 'register.html')
+
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = User.objects.create_user(username, email, password)
+                user.save()
+                messages.info(request, 'Register user successfully!')
+                return redirect('/users/login')
+            else:
+                messages.info(
+                    request, 'Username is already exsit!')
+                return render(request, 'register.html')
