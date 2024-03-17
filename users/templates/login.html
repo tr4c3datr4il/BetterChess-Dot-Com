@@ -1,5 +1,14 @@
+{% if messages %}
+<script>
+    {% for message in messages %}
+    alert("{{ message }}");
+    {% endfor %}
+</script>
+{% endif %}
+
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Login Page</title>
     <style>
@@ -45,10 +54,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>Login</h2>
-        <form>
+        <form action="login" method="POST">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="Enter your username">
@@ -63,4 +73,5 @@
         </form>
     </div>
 </body>
+
 </html>

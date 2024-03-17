@@ -1,0 +1,5 @@
+[client]
+database = chess_game
+user = robbert
+password = x
+default-character-set = utf8
