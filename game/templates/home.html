@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 18px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .scoreboard {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .scoreboard h3 {
+            margin-top: 0;
+        }
+        .scoreboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .scoreboard th, .scoreboard td {
+            padding: 8px;
+            text-align: left;
+        }
+        .scoreboard th {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .scoreboard tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .scoreboard tr:hover {
+            background-color: #ddd;
+        }
+        .mission-card {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .profile-button {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Game!</h1>
+        <a href="/play-1v1" class="button">Play 1v1</a>
+        <a href="/play-with-bot" class="button">Play with Bot</a>
+        
+        <div class="scoreboard">
+            <h3>Scoreboard</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Player 1</td>
+                        <td>1000</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+            <a href="/scoreboard">See Full Scoreboard</a>
+        </div>
+
+        <div class="mission-card">
+            <h3>Daily Mission</h3>
+            <p>Complete today's mission to earn rewards!</p>
+            <!-- Include mission details here -->
+        </div>
+
+        <a href="/user-profile" class="profile-button">User Profile</a>
+    </div>
+</body>
+</html>

@@ -60,5 +60,5 @@ def register_view(request):
                 return redirect('/users/login')
             else:
                 messages.info(
-                    request, 'Username is already exsit!')
+                    request, 'Username is already exist!')
                 return render(request, 'register.html')
