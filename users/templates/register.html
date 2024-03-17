@@ -1,9 +1,9 @@
 {% if messages %}
-<ul class="messages">
+<script>
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-        {% endfor %}
-</ul>
+    alert("{{ message }}");
+    {% endfor %}
+</script>
 {% endif %}
 
 <!DOCTYPE html>

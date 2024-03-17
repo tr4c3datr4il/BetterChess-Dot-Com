@@ -14,7 +14,6 @@ def register(request):
         return render(request, 'register.html')
     elif request.method == 'POST':
         if request.path == '/users/register':
-            print("OK")
             username = request.POST.get('username')
             email = request.POST.get('email')
             password = request.POST.get('password')
@@ -32,5 +31,5 @@ def register(request):
                     return render(request, 'login.html')
                 else:
                     messages.info(
-                        request, 'Username is already exsited!')
+                        request, 'Username is already exsit!')
                     return render(request, 'register.html')
