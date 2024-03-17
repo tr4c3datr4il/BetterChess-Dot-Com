@@ -51,7 +51,7 @@ def register_view(request):
                 user.save()
 
                 connection.cursor().execute(
-                    "INSERT INTO player_info (username) VALUES ('{}');".format(
+                    "INSERT INTO user_playerinfo (username) VALUES ('{}');".format(
                         username
                     )
                 )
