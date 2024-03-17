@@ -49,6 +49,13 @@ def register_view(request):
             except User.DoesNotExist:
                 user = User.objects.create_user(username, email, password)
                 user.save()
+
+                connection.cursor().execute(
+                    "INSERT INTO player_info (username) VALUES ('{}');".format(
+                        username
+                    )
+                )
+
                 messages.info(request, 'Register user successfully!')
                 return redirect('/users/login')
             else:
