@@ -1,1 +1,59 @@
-OK
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        .profile-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+        }
+        p {
+            margin-bottom: 20px;
+        }
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1>User Profile</h1>
+        <img src="avatar.jpg" alt="Avatar" class="avatar">
+        <p>Welcome to BetterChess.com! This is your user profile page. Customize it with your avatar and information.</p>
+        
+        <p>Username: JohnDoe</p>
+        <p>Email: johndoe@example.com</p>
+        
+        <button class="button" onclick="window.location.href='/edit-profile'">Edit Profile</button>
+        <button class="button" onclick="window.location.href='/home'">Go to Home</button>
+    </div>
+</body>
+</html>
