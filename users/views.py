@@ -4,6 +4,7 @@ from django.db import connection
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from users.models import PlayerInfo
 from django.contrib.auth.decorators import login_required
 import hashlib
 
@@ -59,10 +60,8 @@ def register_view(request):
                 user = User.objects.create_user(username, email, password)
                 user.save()
 
-                connection.cursor().execute(
-                    "INSERT INTO player_info (username) VALUES (%s);",
-                    (username,)
-                )
+                userInfo = PlayerInfo()
+                userInfo.save()
 
                 messages.info(request, 'Register user successfully!')
                 return redirect('/users/login')

@@ -24,4 +24,7 @@ urlpatterns = [
     path("game/", include("game.urls")),
     path("users/", include("users.urls")),
     path("admin/", admin.site.urls),
-]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.JS_URL, document_root=settings.JS_ROOT) + \
+    static(settings.CSS_URL, document_root=settings.CSS_ROOT) + \
+    static(settings.IMG_URL, document_root=settings.IMG_ROOT) + \
+    static(settings.CHESSPICES_URL, document_root=settings.CHESSPICE_ROOT)
