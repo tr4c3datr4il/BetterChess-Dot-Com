@@ -9,7 +9,16 @@
             background-color: #f0f0f0;
         }
         .navbar {
-            background-color: #007bff;
+            background-color: #007bff !important;
+        }
+        .navbar-brand {
+            color: #fff !important;
+        }
+        .navbar-nav .nav-link {
+            color: #fff !important;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ccc !important;
         }
         .profile-container {
             margin-top: 20px;
@@ -31,9 +40,9 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="#">BetterChess</a>
+            <a class="navbar-brand" href="/home">BetterChess</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -49,22 +58,28 @@
             </div>
         </div>
     </nav>
-    <div class="container profile-container">
-        <div class="card">
-            <div class="card-body text-center">
-                <h1 class="card-title">{{ user.username }}'s Profile</h1>
-                <img src="avatar.jpg" alt="Avatar" class="avatar">
-                <p class="card-text">Welcome to BetterChess.com! This is your user profile page. Customize it with your avatar and information.</p>
-                <p class="card-text">Username: {{ user.username }}</p>
-                <p class="card-text">Email: {{ user.email }}</p>
+    
+    <div class="container">
+        <h1>Edit Profile</h1>
+        <form action="#" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" value="Current Username" readonly>
             </div>
-        </div>
-        <div class="card mt-4">
-            <div class="card-body">
-                <h5 class="card-title">Chess Game History</h5>
-                <p class="card-text">No games played yet.</p>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" value="current@example.com">
             </div>
-        </div>
+            <div class="form-group">
+                <label for="bio">Bio</label>
+                <textarea id="bio" name="bio" class="form-control">Current Bio</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
     </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,26 +1,24 @@
-{% if messages %}
-<script>
-    {% for message in messages %}
-    alert("{{ message }}");
-    {% endfor %}
-</script>
-{% endif %}
-
+{% load socialaccount %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background-color: #3b3b3b;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             max-width: 400px;
-            margin: 0 auto;
+            margin: 50px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #8c8787;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -35,21 +33,60 @@
             margin-bottom: 5px;
         }
 
-        .form-group input {
-            width: 100%;
-            padding: 5px;
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: calc(100% - 20px); /* Subtracting padding */
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 3px;
+            transition: border-color 0.3s ease;
         }
 
-        .form-group button {
+        .form-group input[type="text"]:focus,
+        .form-group input[type="password"]:focus {
+            border-color: #00bbff;
+        }
+
+        .form-group button[type="submit"] {
             width: 100%;
             padding: 10px;
-            background-color: #4CAF50;
+            background-color: #00bbff;
             color: #fff;
             border: none;
             border-radius: 3px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button[type="submit"]:hover {
+            background-color: #0099e0;
+        }
+
+        .social-login-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4285f4;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-login-btn i {
+            margin-right: 5px;
+        }
+
+        .social-login-btn:hover {
+            background-color: #2e6da4;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -57,19 +94,22 @@
 <body>
     <div class="container">
         <h2>Login</h2>
-        <form action="login" method="POST">
+        <form action="login" method="POST" id="loginForm">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username">
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
             <div class="form-group">
                 <button type="submit">Login</button>
             </div>
         </form>
+        <p>Or login with:</p>
+        <a href="{% provider_login_url 'google' %}?next=/"><button class="social-login-btn"><i class="fab fa-google"></i>Login with Google</button></a>
+        <p>Don't have an account? <a href="/users/register">Register here</a></p>
     </div>
 </body>
 

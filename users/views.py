@@ -11,8 +11,27 @@ import hashlib
 @login_required
 def profile_view(request):
     if request.method == 'GET':
-        return render(request, 'profile.html')
+        user = User.objects.get(username=request.user)
+        return render(request, 'profile.html', {'user': user})
 
+@login_required
+def edit_profile(request):
+    if request.method == 'GET':
+        user = User.objects.get(username=request.user)
+        return render(request, 'edit_profile.html', {'user': user})
+    elif request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = User.objects.get(username=request.user)
+        user.username = username
+        user.email = email
+        user.set_password(password)
+        user.save()
+
+        messages.info(request, 'Edit profile successfully!')
+        return redirect('/users/profile')
 
 @csrf_exempt
 def login_view(request):
