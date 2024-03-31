@@ -1,6 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
+
 <head>
     <title>Better Chessdotcom</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,44 +10,44 @@
 
     <style>
         * {
-            box-sizing:border-box;
+            box-sizing: border-box;
         }
-        
+
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
         }
-        
+
         .container {
             padding: 64px;
         }
-        
+
         .row:after {
             content: "";
             display: table;
             clear: both
         }
-        
+
         .column-66 {
             float: left;
             width: 66.66666%;
             padding: 20px;
         }
-        
+
         .column-33 {
             float: left;
             width: 33.33333%;
             padding: 20px;
         }
-        
+
         .large-font {
             font-size: 48px;
         }
-        
+
         .xlarge-font {
             font-size: 64px
         }
-        
+
         /*.button {
             border: none;
             color: white;
@@ -55,7 +56,7 @@
             cursor: pointer;
             background-color: #04AA6D;
         }*/
-        
+
         img {
             display: block;
             height: auto;
@@ -64,7 +65,7 @@
 
 
 
-        
+
         .button {
             background-color: #14beed;
             border: none;
@@ -99,13 +100,13 @@
         <div class="row">
             <div class="column-66">
                 <h1 class="xlarge-font"><b>Welcome to </b><br><b>Better Chess.Com</b></h1>
-                <p><span style="font-size:36px; color:#14beed;">Play chess with your friends, or against the AI!</span></p>
-                <button class="button"
-                    onclick="window.location.href='/users/register'">Register Now!
+                <p><span style="font-size:36px; color:#14beed;">Play chess with your friends, or against the AI!</span>
+                </p>
+                <button class="button" onclick="window.location.href='/users/register'">Register Now!
                 </button>
             </div>
             <div class="column-33">
-                <img src="{% static 'chess1.jpg' %}">
+                <img src="/img/chess1.jpg">
             </div>
         </div>
     </div>
@@ -114,18 +115,16 @@
     <div class="container" style="background-color:#f1f1f1">
         <div class="row">
             <div class="column-33">
-                <img src="{% static 'chess2.jpg' %}">
+                <img src="/img/chess2.jpg">
             </div>
             <div class="column-66">
                 <h1 class="xlarge-font"><b>Compete</b></h1>
                 <h1 class="large-font" style="color:#14beed;"><b>With who?</b></h1>
                 <p><span style="font-size:24px">With a million of players in the world!</span></p>
-                <button class="button"
-                    onclick="window.location.href='/users/login'">Login to compete!
+                <button class="button" onclick="window.location.href='/users/login'">Login to compete!
                 </button>
             </div>
         </div>
     </div>
 
 </body>
-

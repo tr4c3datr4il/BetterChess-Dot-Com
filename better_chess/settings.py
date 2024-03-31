@@ -137,5 +137,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_URL = '/users/login'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+JS_URL = '/js/'
+JS_ROOT = os.path.join(BASE_DIR, 'static/js')
+
+CSS_URL = '/css/'
+CSS_ROOT = os.path.join(BASE_DIR, 'static/css')
+
+IMG_URL = '/img/'
+IMG_ROOT = os.path.join(BASE_DIR, 'static/img')
+
+CHESSPICES_URL = '/chesspieces/'
+CHESSPICE_ROOT = os.path.join(BASE_DIR, 'static/img/chesspieces')
