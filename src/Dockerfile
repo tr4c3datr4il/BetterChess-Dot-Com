@@ -1,4 +1,4 @@
-FROM python:3.10.11-slim
+FROM python:3.10.12-slim
 
 RUN apt-get update
 RUN apt-get install -y pkg-config python3-dev default-libmysqlclient-dev build-essential

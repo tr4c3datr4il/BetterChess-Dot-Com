@@ -1,5 +1,5 @@
 services:
-  app:
+  better_chess:
     build:
       context: ./src
       dockerfile: Dockerfile
@@ -8,6 +8,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
   db:
     image: "mysql:latest"
     ports:
@@ -19,6 +20,8 @@ services:
       - MYSQL_USER=chess
       - MYSQL_PASSWORD=chess
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 5s
-      retries: 160
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      timeout: 10s
+      retries: 10
+    volumes:
+      - ./src/mysql/chessgame.sql:/docker-entrypoint-initdb.d/chessgame.sql
