@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import hashlib
 
@@ -32,6 +32,7 @@ def edit_profile(request):
 
         messages.info(request, 'Edit profile successfully!')
         return redirect('/users/profile')
+
 
 @csrf_exempt
 def login_view(request):
@@ -81,3 +82,9 @@ def register_view(request):
                 messages.info(
                     request, 'Username is already exist!')
                 return render(request, 'register.html')
+            
+@csrf_exempt
+def logout_view(request):
+    if request.method == 'GET':
+        logout(request)
+        return redirect('/users/login')
