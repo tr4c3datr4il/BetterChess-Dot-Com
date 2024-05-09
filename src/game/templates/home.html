@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .jumbotron {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .button-container .btn {
+            margin: 10px;
+            font-size: 32px;
+            width: 300px;
+        }
+
+        .scoreboard {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .mission-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">BetterChess</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/scoreboard">Scoreboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/profile">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="jumbotron">
+                    <div class="button-container">
+                        <button class="btn btn-primary btn-lg" id="popupBtn1" href="/game/one_vs_one">Play 1v1</button>
+                        <button class="btn btn-primary btn-lg" id="popupBtn2" href="/game/player_vs_machine">Play with
+                            Bot</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mission-card">
+                    <h3>Daily Mission</h3>
+                    <p>Complete today's mission to earn rewards!</p>
+                </div>
+                <div class="scoreboard">
+                    <h3>Scoreboard</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Player</th>
+                                <th>Wins</th>
+                                <th>Loses</th>
+                                <th>Draws</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in scoreboard %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ entry.player.username }}</td>
+                                <td>{{ entry.wins }}</td>
+                                <td>{{ entry.losses }}</td>
+                                <td>{{ entry.draws }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        var popupBtn1 = document.getElementById('popupBtn1');
+        var popupBtn2 = document.getElementById('popupBtn2');
+        var popup1 = document.getElementById('popup1');
+        var popup2 = document.getElementById('popup2');
+        var closeBtn1 = document.getElementById('closeBtn1');
+        var closeBtn2 = document.getElementById('closeBtn2');
+        var overlay = document.getElementById('overlay');
+
+
+        function showPopup1() {
+            popup1.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        function showPopup2() {
+            popup2.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        function hidePopup1() {
+            popup1.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+
+        function hidePopup2() {
+            popup2.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+
+        popupBtn1.addEventListener('click', showPopup1);
+        popupBtn2.addEventListener('click', showPopup2);
+        closeBtn1.addEventListener('click', hidePopup1);
+        closeBtn2.addEventListener('click', hidePopup2);
+        overlay.addEventListener('click', hidePopup1);
+    </script>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"
+    integrity="sha512-zoJXRvW2gC8Z0Xo3lBbao5+AS3g6YWr5ztKqaicua11xHo+AvE1b0lT9ODgrHTmNUxeCw0Ry4BGRYZfXu70weg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    function comminicate(action) {
+        if (!["ping", "echo"].includes(action)) {
+            return;
+        }
+
+        const input = document.getElementById("echo-input")
+
+        var socket = io('/', { transports: ['websocket'] });
+        socket.on('connect', function () {
+            socket.emit(action, { data: action === "ping" ? "ping" : input.value });
+        });
+
+        socket.on('message', function (data) {
+            const result = document.getElementById("result")
+            console.log(data)
+        })
+
+    }
+
+    comminicate("ping");
+
+</script>
+
+</html>

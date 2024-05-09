@@ -13,5 +13,6 @@ urlpatterns = [
     path("", view=views.index, name="index"),
     path("home", view=views.home, name="home"),
     path("scoreboard", view=views.scoreboard, name="scoreboard"),
-    path("one_vs_one", view=views.one_vs_one, name="one_vs_one")
+    path("one_vs_one", view=views.one_vs_one, name="one_vs_one"),
+    path("player_vs_machine", view=views.player_vs_machine, name="player_vs_machine")
 ]

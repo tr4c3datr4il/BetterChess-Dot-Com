@@ -9,17 +9,22 @@ def index(request):
 
 
 @login_required
-def home(request):
-    scoreboard = Scoreboard.objects.all()
-    return render(request, "home.html", {"scoreboard": scoreboard})
-
-
-@login_required
 def scoreboard(request):
     scoreboard = Scoreboard.objects.all()
     return render(request, "scoreboard.html", {"scoreboard": scoreboard})
 
 
 @login_required
+def home(request):
+    scoreboard = Scoreboard.objects.all()
+    return render(request, "home.html", {"scoreboard": scoreboard})
+
+
+@login_required
 def one_vs_one(request):
     return render(request, "one_vs_one.html")
+
+
+@login_required
+def player_vs_machine(request):
+    return render(request, "player_vs_machine.html")

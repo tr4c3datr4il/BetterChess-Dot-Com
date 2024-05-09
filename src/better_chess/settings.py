@@ -76,15 +76,29 @@ WSGI_APPLICATION = "better_chess.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     # "default": {
+#     #     "ENGINE": "django.db.backends.sqlite3",
+#     #     "NAME": BASE_DIR / "db.sqlite3",
+#     # }
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "OPTIONS": {
+#             "read_default_file":   f"{BASE_DIR}/mysql.cnf",
+#         },
+#     }
+# }
+
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR / "db.sqlite3",
-    # }
     "default": {
         "ENGINE": "django.db.backends.mysql",
+        "HOST": "db",
+        "PORT": "3306",
+        "USER": "chess",
+        "PASSWORD": "chess",
+        "NAME": "chess_game",
         "OPTIONS": {
-            "read_default_file":   f"{BASE_DIR}/mysql.cnf",
+            "charset": "utf8mb4",
         },
     }
 }

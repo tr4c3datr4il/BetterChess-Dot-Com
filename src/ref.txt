@@ -1,0 +1,2 @@
+https://realpython.com/get-started-with-django-1/
+https://github.com/smahesh29/Django-WebApp

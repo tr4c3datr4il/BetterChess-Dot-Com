@@ -65,6 +65,8 @@ def register_view(request):
 
                 messages.info(request, 'Register user successfully!')
                 return redirect('/users/login')
+            except:
+                print("???")
             else:
                 messages.info(
                     request, 'Username is already exist!')

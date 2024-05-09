@@ -1,0 +1,41 @@
+services:
+  varnish:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - websocket
+      - better_chess
+  websocket:
+    build:
+      context: ./websocket
+      dockerfile: Dockerfile
+    # ports:
+    #   - "1337:1337"
+  better_chess:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    # ports:
+    #   - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: "mysql:latest"
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    environment:
+      - MYSQL_ROOT_PASSWORD=chess
+      - MYSQL_DATABASE=chess_game
+      - MYSQL_USER=chess
+      - MYSQL_PASSWORD=chess
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost" ]
+      timeout: 10s
+      retries: 10
+    volumes:
+      - ./src/mysql/chessgame.sql:/docker-entrypoint-initdb.d/chessgame.sql
