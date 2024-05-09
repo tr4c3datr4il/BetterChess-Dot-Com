@@ -21,6 +21,7 @@ from django.conf import settings
 
 urlpatterns = [
     path("", include("game.urls")),
+    path('accounts/', include('allauth.urls')),
     path("game/", include("game.urls")),
     path("users/", include("users.urls")),
     path("admin/", admin.site.urls),
