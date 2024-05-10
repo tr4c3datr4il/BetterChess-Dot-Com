@@ -30,6 +30,10 @@ ALLOWED_HOSTS = ['*',]
 
 SITE_ID = 2
 
+LOGIN_URL = '/users/login'
+LOGIN_REDIRECT_URL = '/users/profile'
+LOGOUT_REDIRECT_URL = '/users/login'
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE' : [
@@ -37,8 +41,9 @@ SOCIALACCOUNT_PROVIDERS = {
             'email'
         ],
         'APP': {
-            'client_id': "275980311515-19hhtadepja6o98ps4p7r9gr9ol6ntbn.apps.googleusercontent.com",
-            'secret': "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",
+                'client_id': "275980311515-19hhtadepja6o98ps4p7r9gr9ol6ntbn.apps.googleusercontent.com",
+                'secret': "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",
+                'key':''
         },
         'AUTH_PARAMS': {
             'access_type': 'online',
@@ -47,6 +52,11 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     }
 }
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 # Application definition
 
@@ -182,20 +192,16 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_URL = '/users/login'
-LOGIN_REDIRECT_URL = '/accounts/google/login/callback/'
-LOGOUT_REDIRECT_URL = '/'
-
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_HEADERS = [ "accept", "referer", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "x-csrftoken", "x-sessionid", "x-requested-with"]
 CORS_EXPOSE_HEADERS = ['Set-Cookie']
 CSRF_TRUSTED_ORIGINS = ['https://hen-immune-safely.ngrok-free.app']
 
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
-SOCIALACCOUNT_LOGIN_ON_GET=True
 ACCOUNT_SIGNUP_PASSWORD_VERIFICATION = False
+SOCIALACCOUNT_LOGIN_ON_GET=True
 SOCIALACCOUNT_AUTO_SIGNUP = True
-
 
 JS_URL = '/js/'
 JS_ROOT = os.path.join(BASE_DIR, 'static/js')

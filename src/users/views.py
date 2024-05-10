@@ -11,7 +11,7 @@ import hashlib
 @login_required
 def profile_view(request):
     if request.method == 'GET':
-        user = User.objects.get(username=request.user)
+        user = request.user
         return render(request, 'profile.html', {'user': user})
 
 @login_required

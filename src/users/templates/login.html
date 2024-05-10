@@ -1,13 +1,7 @@
-{% if messages %}
-<script>
-    {% for message in messages %}
-    alert("{{ message }}");
-    {% endfor %}
-</script>
-{% endif %}
+{% load socialaccount %}
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -26,7 +20,7 @@
         }
 
         .login-container {
-            background-color: #fff;
+            background-color: #8c8787;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -36,6 +30,7 @@
         .login-container h1 {
             text-align: center;
             margin-bottom: 20px;
+            color: #fff;
         }
 
         .logo {
@@ -54,6 +49,7 @@
         .form-group label {
             display: block;
             font-weight: bold;
+            color: #fff;
         }
 
         .form-group input {
@@ -67,11 +63,40 @@
         .form-group button {
             width: 100%;
             padding: 10px;
-            background-color: #007bff;
+            background-color: #00bbff;
             color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #0099e0;
+        }
+
+        /* Social login button style */
+        .social-login-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4285f4;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .social-login-btn i {
+            margin-right: 5px;
+        }
+
+        .social-login-btn:hover {
+            background-color: #2e6da4;
         }
     </style>
 </head>
@@ -83,6 +108,7 @@
         </div>
         <h1>Chess Game Login</h1>
         <form action="login" method="POST">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -95,6 +121,9 @@
                 <button type="submit">Login</button>
             </div>
         </form>
+        <p>Or login with:</p>
+        <a href="{% provider_login_url 'google' %}?next=/"><button class="social-login-btn"><i class="fab fa-google"></i>Login with Google</button></a>
+        <p>Don't have an account? <a href="/users/register">Register here</a></p>
     </div>
 </body>
 
