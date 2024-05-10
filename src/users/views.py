@@ -15,13 +15,13 @@ def profile_view(request):
         user = User.objects.get(username=request.user)
         if not PlayerInfo.objects.filter(username=request.user).exists():
             username = user.username
-            email = user.email
             player = PlayerInfo.objects.create(
                 username=username,
-                email=email,
                 ELO=1000
             )
-        return render(request, 'profile.html', {'user': player.username})
+            player.save()
+            
+        return render(request, 'profile.html', {'user': user})
 
 @login_required
 def edit_profile(request):
