@@ -82,12 +82,6 @@ def register_view(request):
                 user = User.objects.create_user(username, email, password)
                 user.save()
 
-                # connection.cursor().execute(
-                #     "INSERT INTO user_playerinfo (username) VALUES ('{}');".format(
-                #         username
-                #     )
-                # )
-
                 messages.info(request, 'Register user successfully!')
                 return redirect('/users/login')
             else:
