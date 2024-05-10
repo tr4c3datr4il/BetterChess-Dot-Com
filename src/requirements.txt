@@ -3,3 +3,4 @@ mysqlclient
 # django-allauth==0.61.1
 django-allauth[socialaccount]
 django-cors-headers
+Pillow

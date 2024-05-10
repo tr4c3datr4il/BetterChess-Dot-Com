@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 from django.contrib import messages
 from django.contrib.auth.models import User
+from .models import PlayerInfo
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import hashlib
@@ -11,8 +12,16 @@ import hashlib
 @login_required
 def profile_view(request):
     if request.method == 'GET':
-        user = request.user
-        return render(request, 'profile.html', {'user': user})
+        user = User.objects.get(username=request.user)
+        if not PlayerInfo.objects.filter(username=request.user).exists():
+            username = user.username
+            email = user.email
+            player = PlayerInfo.objects.create(
+                username=username,
+                email=email,
+                ELO=1000
+            )
+        return render(request, 'profile.html', {'user': player.username})
 
 @login_required
 def edit_profile(request):
@@ -23,6 +32,7 @@ def edit_profile(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
+        password = hashlib.md5(password.encode()).hexdigest()
 
         user = User.objects.get(username=request.user)
         user.username = username
@@ -42,6 +52,7 @@ def login_view(request):
         if request.path == '/users/login':
             username = request.POST.get('username')
             password = request.POST.get('password')
+            password = hashlib.md5(password.encode()).hexdigest()
 
             user = authenticate(username=username, password=password)
 
@@ -67,20 +78,20 @@ def register_view(request):
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
+                password = hashlib.md5(password.encode()).hexdigest()
                 user = User.objects.create_user(username, email, password)
                 user.save()
 
-                connection.cursor().execute(
-                    "INSERT INTO user_playerinfo (username) VALUES ('{}');".format(
-                        username
-                    )
-                )
+                # connection.cursor().execute(
+                #     "INSERT INTO user_playerinfo (username) VALUES ('{}');".format(
+                #         username
+                #     )
+                # )
 
                 messages.info(request, 'Register user successfully!')
                 return redirect('/users/login')
             else:
-                messages.info(
-                    request, 'Username is already exist!')
+                messages.info(request, 'Username is already exist!')
                 return render(request, 'register.html')
             
 @csrf_exempt
