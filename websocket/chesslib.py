@@ -208,7 +208,7 @@ class Game:
 
     def get_moves(self):
         return movegen.get_legal_moves(self)
-
+    
     def get_winner(self):
         possible_moves = self.get_moves()
         # if there are possible moves left, the game is not over

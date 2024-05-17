@@ -19,15 +19,15 @@ EXPOSE 1337
 
 WORKDIR /app
 
+RUN wget https://github.com/official-stockfish/Stockfish/releases/download/sf_16.1/stockfish-ubuntu-x86-64-avx2.tar -O stockfish-ubuntu-x86-64-avx2.tar
+
+RUN tar xvf stockfish-ubuntu-x86-64-avx2.tar
+
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
 COPY . .
-
-RUN wget https://github.com/official-stockfish/Stockfish/releases/download/sf_16.1/stockfish-ubuntu-x86-64-avx2.tar -O stockfish-ubuntu-x86-64-avx2.tar
-
-RUN tar xvf stockfish-ubuntu-x86-64-avx2.tar
 
 RUN chmod +x ./run.sh
 

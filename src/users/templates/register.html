@@ -1,3 +1,11 @@
+{% if messages %}
+<script>
+    {% for message in messages %}
+    alert("{{ message }}");
+    {% endfor %}
+</script>
+{% endif %}
+
 {% load socialaccount %}
 
 <!DOCTYPE html>

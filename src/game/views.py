@@ -23,8 +23,8 @@ def home(request):
 
 
 @login_required
-def one_vs_one(request):
-    return render(request, "one_vs_one.html")
+def one_vs_one(request, room_name):
+    return render(request, "one_vs_one.html", {"room_name": room_name})
 
 
 @login_required
