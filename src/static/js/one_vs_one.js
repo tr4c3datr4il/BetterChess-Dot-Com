@@ -127,21 +127,21 @@ socket.on('state', function(data) {
 //     updateStatus();
 // });
 
-socket.on('connect', function() {
+socket.on('connect_mul', function() {
     console.log(roomName);
     joinGame(roomName);
 });
 
-socket.on('disconnect', function() {
+socket.on('disconnect_mul', function() {
     console.log('Disconnected');
 });
 
 function joinGame(roomName) {
-    socket.emit('join', { room_name: roomName });
+    socket.emit('join_mul', { room_name: roomName });
 }
 
 function sendMove(moveData, source, target) {
-    socket.emit('move', moveData);
+    socket.emit('move_mul', moveData);
 }
 
 function updateStatus(status) {

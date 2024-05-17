@@ -203,7 +203,7 @@ class MultiPlayerGameWrapper:
             socketio.emit('state', self.get_player_state(player), room=player)
             # socketio.emit('move_made', {'move': move.uci()}, room=player)
 
-        # Psuedo code for game over
+        ### Psuedo code for game over
         # if self.game.is_checkmate():
         #     for player in self.players:
         #         if self.game.turn == player:
@@ -253,11 +253,3 @@ def onmsg_move_mul(data):
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=1337, debug=False)
-
-
-
-
-
-if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=1337,
-                 debug=False)
