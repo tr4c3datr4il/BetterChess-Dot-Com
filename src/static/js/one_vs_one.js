@@ -116,16 +116,16 @@ socket.on('state', function(data) {
     board.position(data.pos);
 });
 
-socket.on('move_made', function(data) {
-    var move = game.move(data.move);
-    if (move === null) {
-        console.error('Invalid move received from server');
-        return;
-    }
-    console.log(data.move);
-    board.position(game.fen());
-    updateStatus();
-});
+// socket.on('move_made', function(data) {
+//     var move = game.move(data.move);
+//     if (move === null) {
+//         console.error('Invalid move received from server');
+//         return;
+//     }
+//     console.log(data.move);
+//     board.position(game.fen());
+//     updateStatus();
+// });
 
 socket.on('connect', function() {
     console.log(roomName);
