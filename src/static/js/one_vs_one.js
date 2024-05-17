@@ -1,138 +1,103 @@
-// var board = null
-// var game = new Chess()
-// var $status = $('#status')
-// var $fen = $('#fen')
-// var $pgn = $('#pgn')
+var $roomName = 'hehe';
+var socket = io('/', { transports: ['websocket'] });
+var game = new Chess();
+var $status = $('#status')
+var $fen = $('#fen')
+var $pgn = $('#pgn')
 
-// function onDragStart(source, piece, position, orientation) {
-
-//     if (game.game_over()) return false
-
-//     // only pick up pieces for the side to move
-//     if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-//         (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-//         return false
-//     }
-// }
-
-// function onDrop(source, target) {
-
-//     var move = game.move({
-//         from: source,
-//         to: target,
-//         promotion: 'q'
-//     })
-
-//     if (move === null) return 'snapback'
-
-//     updateStatus()
-// }
-
-// function onSnapEnd() {
-//     board.position(game.fen())
-// }
-
-// function updateStatus() {
-//     var status = ''
-
-//     var moveColor = 'White'
-//     if (game.turn() === 'b') {
-//         moveColor = 'Black'
-//     }
-
-
-//     if (game.in_checkmate()) {
-//         status = 'Game over, ' + moveColor + ' is in checkmate.'
-//     }
-
-
-//     else if (game.in_draw()) {
-//         status = 'Game over, drawn position'
-//     }
-
-//     else {
-//         status = moveColor + ' to move'
-
-
-//         if (game.in_check()) {
-//             status += ', ' + moveColor + ' is in check'
-//         }
-//     }
-
-//     $status.html(status)
-//     $fen.html(game.fen())
-//     $pgn.html(game.pgn())
-//     console.log(game.pgn())
-// }
-
-// var config = {
-//     draggable: true,
-//     position: 'start',
-//     onDragStart: onDragStart,
-//     onDrop: onDrop,
-//     onSnapEnd: onSnapEnd,
-//     pieceTheme: '/chesspieces/{piece}.png'
-// }
-// board = Chessboard('myBoard', config)
-
-// updateStatus()
-
-
-var roomName = 'hehe';
-var socket = io('https://hen-immune-safely.ngrok-free.app/');
+const BLACK = 'b';
+const WHITE = 'w';
 
 function onDragStart(source, piece, position, orientation) {
+
     if (game.game_over()) return false;
 
-    if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-        (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+    if ((game.turn === 'w' && piece.search(/^b/) !== -1) ||
+        (game.turn === 'b' && piece.search(/^w/) !== -1)) {
         return false;
     }
 }
 
+var $can_move = false;
+
 function onDrop(source, target) {
-    var roomName = "hehe";
-    var move = game.move({
-        from: source,
-        to: target,
-        promotion: 'q'
+
+    function checkTurn() {
+        return new Promise((resolve, reject) => {
+
+            socket.emit('check_turn', { room_name: $roomName });
+
+            socket.on('can_move', function (data) {
+                //console.log('Get: ' + data);
+                if (data['vaild_turn'] === 'True' && data['color'] === game.turn) {
+                    //console.log("OKE");
+                    $can_move = true;
+                } else {
+                    $can_move = false;
+                }
+                resolve($can_move);
+            });
+
+            // Handle error if needed (optional)
+            socket.on('error', function (error) {
+                reject(error);
+            });
+        });
+    }
+    // Handle the turn check and subsequent logic
+    return checkTurn().then((canMove) => {
+        if (!canMove) {
+            var move = game.move({
+                from: source,
+                to: source,
+                promotion: 'q'
+            });
+
+            return 'snapback';
+        } else {
+
+            var move = game.move({
+                from: source,
+                to: target,
+                promotion: 'q'
+            });
+
+            if (move === null) return 'snapback';
+
+            var moveData = {
+                room_name: $roomName,
+                move
+            };
+            sendMove(moveData, source, target);
+            return;
+        }
+    }).catch((error) => {
+        console.error('Error:', error);
+        // Handle the error appropriately
+        return 'snapback';
     });
-    if (move === null) return 'snapback';
-
-    var moveData = {
-        room_name: roomName,
-        move
-    };
-
-    sendMove(moveData, source, target);
 }
 
-function onSnapEnd() {
-    board.position(game.fen());
-}
+socket.on('connect_mul', function () {
+    console.log($roomName);
+    joinGame($roomName);
+});
 
-socket.on('state', function(data) {
+socket.on('state', function (data) {
+    console.log("HIT state")
     updateStatus(data.status);
-    board.position(data.pos);
+    game.load(data.pos);
+    $board.position(game.fen());
+    if (data.which_turn === WHITE) {
+        game.turn = WHITE;
+    } else {
+        game.turn = BLACK;
+    }
+    console.log(`Turn: ${game.turn}`)
+    updateStatus()
 });
 
-// socket.on('move_made', function(data) {
-//     var move = game.move(data.move);
-//     if (move === null) {
-//         console.error('Invalid move received from server');
-//         return;
-//     }
-//     console.log(data.move);
-//     board.position(game.fen());
-//     updateStatus();
-// });
-
-socket.on('connect_mul', function() {
-    console.log(roomName);
-    joinGame(roomName);
-});
-
-socket.on('disconnect_mul', function() {
+socket.on('disconnect_mul', function () {
     console.log('Disconnected');
 });
 
@@ -144,41 +109,53 @@ function sendMove(moveData, source, target) {
     socket.emit('move_mul', moveData);
 }
 
-function updateStatus(status) {
-    var statusText = '';
-    if (status === 'Game over, drawn position' || status === 'Game over, turn limit') {
-        statusText = 'Game over: ' + status;
-    } else {
-        statusText = status;
-    }
-    $('#status').html(statusText);
+function onSnapEnd() {
+    $board.position(game.fen())
 }
 
-var board = Chessboard('myBoard', {
+var $board = Chessboard('myBoard', {
     draggable: true,
-    position: 'start',
-    onDragStart: onDragStart,
+    position: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     onDrop: onDrop,
     onSnapEnd: onSnapEnd,
     pieceTheme: '/chesspieces/{piece}.png'
 });
 
-var game = new Chess();
 
-function updateStatus(status) {
-    var statusText = '';
-    if (status === 'Game over, drawn position' || status === 'Game over, turn limit') {
-        statusText = 'Game over: ' + status;
-    } else {
-        statusText = status;
+function updateStatus() {
+    var status = ''
+
+    var moveColor = 'White'
+    if (game.turn === 'b') {
+        moveColor = 'Black'
     }
-    $('#status').html(statusText);
+
+
+    if (game.in_checkmate()) {
+        status = 'Game over, ' + moveColor + ' is in checkmate.'
+    }
+
+
+    else if (game.in_draw()) {
+        status = 'Game over, drawn position'
+    }
+
+    else {
+        status = moveColor + ' to move'
+
+
+        if (game.in_check()) {
+            status += ', ' + moveColor + ' is in check'
+        }
+    }
+
+    $status.html(status)
 }
 
 function initGame() {
-    joinGame(roomName);
+    joinGame($roomName);
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     initGame();
 });

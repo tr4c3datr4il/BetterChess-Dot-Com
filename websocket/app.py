@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, request
 from flask_socketio import SocketIO, emit
 from stockfish import Stockfish
@@ -140,94 +141,98 @@ def onmsg_move(move):
     games[request.sid].play_move(move)
 
 
-
-
-
-
-##### MULTIPLAYER HERE
-import logging
+# MULTIPLAYER HERE
 logging.basicConfig(level=logging.DEBUG)
 
 
 games = {}
+
+
 class MultiPlayerGameWrapper:
     def __init__(self, room_name):
         self.room_name = room_name
         self.players = {}  # Track players in the room
         self.game = chesslib.Game(chesslib.STARTING_FEN)
-        self.engine = Stockfish("./stockfish/stockfish-ubuntu-x86-64-avx2",
-                                parameters={"Threads": 4}, depth=STOCKFISH_DEPTH)
+        self.white_turn = True
 
-    def add_player(self, player_sid):
-        self.players[player_sid] = True 
+    def add_player(self, player_sid, color):
+        self.players[player_sid] = color
 
     def remove_player(self, player_sid):
         if player_sid in self.players:
             del self.players[player_sid]
 
     def get_player_state(self, player_sid):
-        is_your_turn = (self.game.turns % 2 == 0 and player_sid == chesslib.Piece.BLACK) or \
-                        (self.game.turns % 2 == 1 and player_sid == chesslib.Piece.WHITE)
-        moves = [f"{m}" for m in self.game.get_moves()] if is_your_turn and self.game.turns < TURN_LIMIT else []
+        # is_your_turn = (self.game.turns % 2 == 0 and player_sid == chesslib.Piece.BLACK) or \
+        #     (self.game.turns % 2 == 1 and player_sid == chesslib.Piece.WHITE)
+        moves = [f"{m}" for m in self.game.get_moves(
+        )]
         status = self.game.get_winner()
+
+        which_turn = "w" if self.white_turn else "b"
 
         return {
             "pos": self.game.export_fen(),
             "moves": moves,
-            "your_turn": is_your_turn,
+            # "your_turn": is_your_turn,
             "status": status,
-            "turn_counter": f"{self.game.turns} / {TURN_LIMIT} turns"
+            "turn_counter": f"{self.game.turns} / {TURN_LIMIT} turns",
+            "which_turn": which_turn
         }
+
+    def check_turn(self, player_sid) -> bool:
+        vaild_turn = ((not self.white_turn) and self.players[player_sid] == 'black') or \
+            (self.white_turn and self.players[player_sid] == 'white')
+
+        logging.debug(f"{self.white_turn} - {self.players[player_sid]}")
+
+        _ = "White" if self.white_turn else "Black"
+        logging.debug(
+            f"Player {player_sid} -> {self.players[player_sid]} | turn = {_}")
+
+        return vaild_turn
 
     def play_move(self, player_sid, move):
         logging.debug(f"Players: {self.players}")
-
-        # handle qua ngu toi da thua
-        # if player_sid != self.game.turn:
-        #     logging.debug(f"Player {player_sid} tried to play out of turn")
-        #     return
 
         extracted_move = move['from'] + move['to']
         move = movegen.Move.from_uci(self.game, extracted_move)
         legal_moves = self.game.get_moves()
 
         if move not in legal_moves:
-            logging.debug(f"Player {player_sid} tried to play illegal move {move}")
-            return 
+            logging.debug(
+                f"Player {player_sid} tried to play illegal move {move}")
+            return
 
         self.game.play_move(move)
+        self.white_turn = (not self.white_turn)
 
         logging.debug(f"Player {player_sid} played move {move}")
 
         for player in self.players:
+            logging.debug(f'Emit to {player}')
             socketio.emit('state', self.get_player_state(player), room=player)
-            # socketio.emit('move_made', {'move': move.uci()}, room=player)
 
-        ### Psuedo code for game over
-        # if self.game.is_checkmate():
-        #     for player in self.players:
-        #         if self.game.turn == player:
-        #             socketio.emit('game_over', {'result': 'win'}, room=player)
-        #         else:
-        #             socketio.emit('game_over', {'result': 'lose'}, room=player)
-        # elif self.game.is_stalemate() or self.game.turns >= TURN_LIMIT:
-        #     for player in self.players:
-        #         socketio.emit('game_over', {'result': 'draw'}, room=player)
 
 @socketio.on('connect_mul')
 def on_connect_mul():
     pass
 
+
 @socketio.on('join_mul')
 def on_join_mul(data):
     room_name = data['room_name']
+    color = 'black'
     if room_name not in games:
+        color = 'white'
         games[room_name] = MultiPlayerGameWrapper(room_name)
         logging.debug(f"New game created: {room_name}")
         logging.debug(f"Games: {games}")
     logging.debug(f"Player {request.sid} joined room {room_name}")
-    games[room_name].add_player(request.sid)
-    emit('state', games[room_name].get_player_state(request.sid), room=request.sid)
+    games[room_name].add_player(request.sid, color)
+    emit('state', games[room_name].get_player_state(
+        request.sid), room=request.sid)
+
 
 @socketio.on('disconnect_mul')
 def on_disconnect_mul():
@@ -241,15 +246,37 @@ def on_disconnect_mul():
                 logging.debug(f"Games: {games}")
             break
 
+
+@socketio.on('check_turn')
+def onmsg_check_turn(data):
+    room_name = data['room_name']
+    try:
+        logging.debug(f"Player {request.sid} tried to play this turn!")
+        if games[room_name].check_turn(request.sid):
+            vaild_turn = 'True'
+        else:
+            logging.debug(f"Player {request.sid} tried to play out of turn")
+            vaild_turn = 'False'
+        emit('can_move', {
+             "vaild_turn": vaild_turn,
+             "color": games[room_name].players[request.sid][0]  # 'w' or 'b'
+             },
+             room=request.sid)
+    except ValueError as e:
+        emit('error', str(e), room=request.sid)
+
+
 @socketio.on('move_mul')
 def onmsg_move_mul(data):
     room_name = data['room_name']
     move = data['move']
     try:
         logging.debug(f"Player {request.sid} played move {move}")
-        games[room_name].play_move(request.sid, move)
+        if games[room_name].check_turn(request.sid):
+            games[room_name].play_move(request.sid, move)
     except ValueError as e:
         emit('error', str(e), room=request.sid)
+
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=1337, debug=False)
