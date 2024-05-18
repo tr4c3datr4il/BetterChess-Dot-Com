@@ -6,3 +6,5 @@ django-cors-headers
 Pillow
 django-crispy-forms
 crispy_bootstrap5
+celery
+redis

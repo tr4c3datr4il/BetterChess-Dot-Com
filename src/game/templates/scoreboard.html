@@ -7,13 +7,13 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #222;
         }
         .scoreboard {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #444;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
@@ -64,7 +64,7 @@
                 {% for entry in scoreboard %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ entry.player.username }}</td>
+                    <td>{{ entry.player.user.username }}</td>
                     <td>{{ entry.wins }}</td>
                     <td>{{ entry.losses }}</td>
                     <td>{{ entry.draws }}</td>

@@ -3,7 +3,7 @@ from users.models import PlayerInfo
 from django.contrib.auth.models import User
 
 class Scoreboard(models.Model):
-    player = models.ForeignKey(PlayerInfo, on_delete=models.CASCADE, related_name='scoreboard_set')
+    player = models.ForeignKey(PlayerInfo, on_delete=models.CASCADE, related_name='scoreboards')
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
     draws = models.IntegerField(default=0)
@@ -14,6 +14,7 @@ class Scoreboard(models.Model):
 class Room(models.Model):
     name = models.CharField(max_length=100, unique=True)
     players = models.ManyToManyField(User, related_name='rooms')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

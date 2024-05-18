@@ -242,8 +242,7 @@ def on_disconnect_mul():
             games[room_name].remove_player(request.sid)
             if len(games[room_name].players) == 0:
                 del games[room_name]
-                logging.debug(f"Game {room_name} removed")
-                logging.debug(f"Games: {games}")
+                logging.debug(f"Room {room_name} is empty, deleting it")
             break
 
 
@@ -264,6 +263,24 @@ def onmsg_check_turn(data):
              room=request.sid)
     except ValueError as e:
         emit('error', str(e), room=request.sid)
+
+@socketio.on('get_winner')
+def onmsg_get_winner(data):
+    room_name = data['room_name']
+    color = data['color'].lower()
+    
+    if room_name in games:
+        game = games[room_name]
+        player_sid = request.sid
+        if player_sid in game.players:
+            logging.debug(f"Player {game.players[player_sid]} requested winner! {game.players[player_sid]} : {color}")
+
+            result = 'WINNER' if color == game.players[player_sid] else 'LOSER'
+            socketio.emit('winner', result, room=player_sid)
+        else:
+            logging.error(f"Invalid player SID {player_sid} for room {room_name}")
+    else:
+        logging.error(f"Invalid room name {room_name}")
 
 
 @socketio.on('move_mul')

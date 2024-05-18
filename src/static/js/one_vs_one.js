@@ -1,15 +1,16 @@
-function getRoomNameFromUrl() {
-    var path = window.location.pathname;
-    var parts = path.split('/');
-    if (parts.length >= 2) {
-        return parts[2];
-    }
-    return null;
-}
+// function getRoomNameFromUrl() {
+//     var path = window.location.pathname;
+//     var parts = path.split('/');
+//     if (parts.length >= 2) {
+//         return parts[2];
+//     }
+//     return null;
+// }
 
-var $roomName = getRoomNameFromUrl();
+// var $roomName = getRoomNameFromUrl();
 
 console.log($roomName);
+console.log($player_name);
 
 var socket = io('/', { transports: ['websocket'] });
 var game = new Chess();
@@ -91,8 +92,7 @@ function onDrop(source, target) {
 }
 
 socket.on('connect_mul', function () {
-    console.log($roomName);
-    joinGame($roomName);
+    joinGame($roomName, $player_name);
 });
 
 socket.on('state', function (data) {
@@ -114,7 +114,7 @@ socket.on('disconnect_mul', function () {
 });
 
 function joinGame(roomName) {
-    socket.emit('join_mul', { room_name: roomName });
+    socket.emit('join_mul', { room_name: roomName, player_name: $player_name });
 }
 
 function sendMove(moveData, source, target) {
@@ -133,7 +133,6 @@ var $board = Chessboard('myBoard', {
     pieceTheme: '/chesspieces/{piece}.png'
 });
 
-
 function updateStatus() {
     var status = ''
 
@@ -142,11 +141,11 @@ function updateStatus() {
         moveColor = 'Black'
     }
 
-
     if (game.in_checkmate()) {
         status = 'Game over, ' + moveColor + ' is in checkmate.'
+        
+        getWinner(moveColor);
     }
-
 
     else if (game.in_draw()) {
         status = 'Game over, drawn position'
@@ -155,13 +154,28 @@ function updateStatus() {
     else {
         status = moveColor + ' to move'
 
-
         if (game.in_check()) {
             status += ', ' + moveColor + ' is in check'
         }
     }
 
     $status.html(status)
+}
+
+socket.on('winner', function (data) {
+    var check = data === 'WINNER' ? 'False' : 'True';
+
+    window.location.href = `/handle_winner/${$roomName}/${check}`;
+});
+
+var counter = 0;
+function getWinner(color) {
+    if (counter <= 3) {
+        socket.emit('get_winner', { room_name: $roomName, color: color });
+        return;
+    }
+    counter++;
+    socket.emit('get_winner', { room_name: $roomName, color: color });
 }
 
 function initGame() {
