@@ -21,7 +21,7 @@ def profile_view(request):
             )
             player.save()
             
-        return render(request, 'profile.html', {'user': user})
+        return render(request, 'profile.html', {'user': user, 'player': PlayerInfo.objects.get(username=request.user)})
 
 @login_required
 def edit_profile(request):

@@ -1,4 +1,16 @@
-var $roomName = 'hehe';
+function getRoomNameFromUrl() {
+    var path = window.location.pathname;
+    var parts = path.split('/');
+    if (parts.length >= 2) {
+        return parts[2];
+    }
+    return null;
+}
+
+var $roomName = getRoomNameFromUrl();
+
+console.log($roomName);
+
 var socket = io('/', { transports: ['websocket'] });
 var game = new Chess();
 var $status = $('#status')

@@ -4,3 +4,5 @@ mysqlclient
 django-allauth[socialaccount]
 django-cors-headers
 Pillow
+django-crispy-forms
+crispy_bootstrap5

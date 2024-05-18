@@ -15,7 +15,7 @@
         }
 
         .navbar {
-            background-color: #333 !important; /* Darker background */
+            background-color: #333 !important;
         }
 
         .navbar-brand {
@@ -33,6 +33,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            margin-bottom: 20px;
         }
 
         .jumbotron .button-container {
@@ -56,6 +57,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         .mission-card h3,
@@ -105,8 +107,8 @@
             <div class="col-md-6">
                 <div class="jumbotron">
                     <div class="button-container">
-                        <button class="btn btn-primary btn-lg" id="popupBtn1">Play 1v1</button>
-                        <button class="btn btn-primary btn-lg" id="popupBtn2">Play with Bot</button>
+                        <button class="btn btn-primary btn-lg" id="playerBtn">Play 1v1</button>
+                        <button class="btn btn-primary btn-lg" id="botBtn">Play with Bot</button>
                     </div>
                 </div>
             </div>
@@ -128,7 +130,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            { for user }
+
                         </tbody>
                     </table>
                 </div>
@@ -141,12 +143,12 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        document.getElementById('popupBtn1').addEventListener('click', function() {
-            window.location.href = "/game/one_vs_one";
+        document.getElementById('playerBtn').addEventListener('click', function() {
+            window.open("/game/available_rooms", "_self");
         });
 
-        document.getElementById('popupBtn2').addEventListener('click', function() {
-            window.location.href = "/game/player_vs_machine";
+        document.getElementById('botBtn').addEventListener('click', function() {
+            window.open("/game/player_vs_machine", "_self");
         });
     </script>
 </body>

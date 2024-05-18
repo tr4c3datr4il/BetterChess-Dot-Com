@@ -1,59 +1,90 @@
+{% load crispy_forms_tags %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            text-align: center;
+            background-color: #222;
+            color: #fff;
         }
-        .profile-container {
+
+        .content-section {
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #444;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h1 {
-            margin-top: 0;
-        }
-        p {
-            margin-bottom: 20px;
-        }
-        .avatar {
+
+        .account-img {
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            margin-bottom: 20px;
+            margin-right: 20px;
         }
-        .button {
+
+        .account-heading {
+            margin-top: 0;
+            color: #007bff;
+        }
+
+        .media-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .btn-custom {
             padding: 10px 20px;
             font-size: 18px;
-            text-decoration: none;
             color: #fff;
             background-color: #007bff;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
-        .button:hover {
+
+        .btn-custom:hover {
             background-color: #0056b3;
+        }
+
+        .text-secondary {
+            color: #ddd !important;
         }
     </style>
 </head>
 <body>
-    <div class="profile-container">
-        <h1>User Profile</h1>
-        <img src="avatar.jpg" alt="Avatar" class="avatar">
-        <p>Welcome to BetterChess.com! This is your user profile page. Customize it with your avatar and information.</p>
-        
-        <p>Username: {{ user.username }}</p>
-        <p>Email: {{ user.email }}</p>
-        
-        <button class="button" onclick="window.location.href='/edit_profile'">Edit Profile</button>
-        <button class="button" onclick="window.location.href='/home'">Go to Home</button>
-    </div>    
+    <div class="container">
+        <div class="content-section">
+            <div class="media">
+                <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" alt="Avatar">
+                <div class="media-body">
+                    <h2 class="account-heading">{{ user.username }}</h2>
+                    <p class="text-secondary">{{ user.email }}</p>
+                    <p class="text-secondary">ELO: {{ player.ELO }}</p>
+                </div>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Profile Info</legend>
+                    {{ u_form|crispy }}
+                    {{ p_form|crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-custom" type="button" onclick="window.location.href='/users/edit_profile'">Update</button>
+                    <button class="btn btn-custom" type="button" onclick="window.location.href='/home'">Go to Home</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

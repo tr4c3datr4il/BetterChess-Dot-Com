@@ -80,6 +80,9 @@ INSTALLED_APPS = [
     "better_chess",
     "users",
     "game",
+
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
