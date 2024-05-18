@@ -58,16 +58,18 @@
                     <th>Wins</th>
                     <th>Losses</th>
                     <th>Draws</th>
+                    <th>ELO</th>
                 </tr>
             </thead>
             <tbody>
                 {% for entry in scoreboard %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ entry.player.user.username }}</td>
+                    <td>{{ entry.player.username }}</td>
                     <td>{{ entry.wins }}</td>
                     <td>{{ entry.losses }}</td>
                     <td>{{ entry.draws }}</td>
+                    <td>{{ entry.player.ELO }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -1,6 +1,7 @@
 from django.urls import path
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required, permission_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Scoreboard, Room
 from users.models import PlayerInfo
 from django.db.models import Count, F
@@ -13,7 +14,7 @@ def index(request):
 
 @login_required
 def scoreboard(request):
-    scoreboard = Scoreboard.objects.all()
+    scoreboard = Scoreboard.objects.all().order_by('-player__ELO')
     return render(request, "scoreboard.html", {"scoreboard": scoreboard})
 
 @login_required
@@ -32,6 +33,9 @@ def create_room(request):
     if request.method == "POST":
         room_name = request.POST.get("room_name")
         if room_name:
+            if Room.objects.filter(name=room_name).exists():
+                messages.error(request, "Room name already exists!")
+                return redirect('create_room')
             Room.objects.create(name=room_name)
             return redirect('available_rooms')
     return render(request, "create_room.html")
@@ -54,15 +58,23 @@ def player_vs_machine(request):
 
 @login_required
 def handle_winner(request, room_name, is_winner):
-    player_info = PlayerInfo.objects.get(username=request.user)
+    player_info = get_object_or_404(PlayerInfo, username=request.user)
+    scoreboard_entry, created = Scoreboard.objects.get_or_create(player=player_info)
 
     if is_winner == 'True':
-        player_info.ELO = F('ELO') + 30
-        Scoreboard.objects.filter(player=player_info).update(wins=F('wins') + 1)
+        player_info.ELO += 30
+        player_info.save()
+        scoreboard_entry.wins = F('wins') + 1
     else:
-        player_info.ELO = F('ELO') - 10
-        Scoreboard.objects.filter(player=player_info).update(losses=F('losses') + 1)
+        player_info.ELO -= 10
+        player_info.save()
+        scoreboard_entry.losses = F('losses') + 1
 
-    player_info.save()
+    scoreboard_entry.save()
+    
+    if is_winner == 'True':
+        messages.info(request, 'You won the game!')
+    else:
+        messages.info(request, 'You lost the game!')
 
     return redirect('home')
