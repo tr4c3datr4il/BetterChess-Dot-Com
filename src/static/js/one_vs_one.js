@@ -9,6 +9,8 @@
 
 // var $roomName = getRoomNameFromUrl();
 
+var $orientation = 'white';
+
 console.log($roomName);
 console.log($player_name);
 
@@ -95,11 +97,16 @@ socket.on('connect_mul', function () {
     joinGame($roomName, $player_name);
 });
 
+socket.on('set_color', function (data) {
+    $orientation = data;
+    board.orientation(data);
+})
+
 socket.on('state', function (data) {
     console.log("HIT state")
     updateStatus(data.status);
     game.load(data.pos);
-    $board.position(game.fen());
+    board.position(game.fen());
     if (data.which_turn === WHITE) {
         game.turn = WHITE;
     } else {
@@ -122,12 +129,13 @@ function sendMove(moveData, source, target) {
 }
 
 function onSnapEnd() {
-    $board.position(game.fen())
+    board.position(game.fen())
 }
 
-var $board = Chessboard('myBoard', {
+var board = Chessboard('myBoard', {
     draggable: true,
-    position: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    orientation: $orientation,
+    position: "start",
     onDrop: onDrop,
     onSnapEnd: onSnapEnd,
     pieceTheme: '/chesspieces/{piece}.png'
@@ -143,7 +151,7 @@ function updateStatus() {
 
     if (game.in_checkmate()) {
         status = 'Game over, ' + moveColor + ' is in checkmate.'
-        
+
         getWinner(moveColor);
     }
 

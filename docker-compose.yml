@@ -39,7 +39,7 @@ services:
       retries: 10
     volumes:
       - ./src/mysql/chessgame.sql:/docker-entrypoint-initdb.d/chessgame.sql
-  
+
   # Real time monitoring for service
   redis:
     image: "redis:alpine"
@@ -50,7 +50,7 @@ services:
     build:
       context: ./src
       dockerfile: Dockerfile
-    command: celery -A your_project_name worker --loglevel=info
+    command: celery -A better_chess worker --loglevel=info
     depends_on:
       - better_chess
       - redis
@@ -59,7 +59,7 @@ services:
     build:
       context: ./src
       dockerfile: Dockerfile
-    command: celery -A your_project_name beat --loglevel=info
+    command: celery -A better_chess beat --loglevel=info
     depends_on:
       - better_chess
       - redis

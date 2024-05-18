@@ -230,6 +230,8 @@ def on_join_mul(data):
         logging.debug(f"Games: {games}")
     logging.debug(f"Player {request.sid} joined room {room_name}")
     games[room_name].add_player(request.sid, color)
+
+    emit('set_color', games[room_name].players[request.sid], room=request.sid)
     emit('state', games[room_name].get_player_state(
         request.sid), room=request.sid)
 
@@ -264,21 +266,24 @@ def onmsg_check_turn(data):
     except ValueError as e:
         emit('error', str(e), room=request.sid)
 
+
 @socketio.on('get_winner')
 def onmsg_get_winner(data):
     room_name = data['room_name']
     color = data['color'].lower()
-    
+
     if room_name in games:
         game = games[room_name]
         player_sid = request.sid
         if player_sid in game.players:
-            logging.debug(f"Player {game.players[player_sid]} requested winner! {game.players[player_sid]} : {color}")
+            logging.debug(
+                f"Player {game.players[player_sid]} requested winner! {game.players[player_sid]} : {color}")
 
             result = 'WINNER' if color == game.players[player_sid] else 'LOSER'
             socketio.emit('winner', result, room=player_sid)
         else:
-            logging.error(f"Invalid player SID {player_sid} for room {room_name}")
+            logging.error(
+                f"Invalid player SID {player_sid} for room {room_name}")
     else:
         logging.error(f"Invalid room name {room_name}")
 
