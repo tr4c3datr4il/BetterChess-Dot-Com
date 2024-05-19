@@ -104,7 +104,6 @@ socket.on('set_color', function (data) {
 
 socket.on('state', function (data) {
     console.log("HIT state")
-    updateStatus(data.status);
     game.load(data.pos);
     board.position(game.fen());
     if (data.which_turn === WHITE) {
@@ -113,7 +112,7 @@ socket.on('state', function (data) {
         game.turn(BLACK);
     }
     console.log(`Turn: ${game.turn()}`)
-    updateStatus()
+    updateStatus();
 });
 
 socket.on('disconnect_mul', function () {
@@ -145,7 +144,7 @@ function updateStatus() {
     var status = ''
 
     var moveColor = 'White'
-    if (game.turn === 'b') {
+    if (game.turn() === 'b') {
         moveColor = 'Black'
     }
 
