@@ -53,7 +53,8 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'AUTH_PARAMS': {
             'access_type': 'online',
-            'redirect_uri': 'https://hen-immune-safely.ngrok-free.app/accounts/google/login/callback/'
+            # 'redirect_uri': 'https://hen-immune-safely.ngrok-free.app/accounts/google/login/callback/'
+            'redirect_uri': 'https://my-bestsite-ever.xyz/accounts/google/login/callback/'
         },
         'OAUTH_PKCE_ENABLED': True,
     }

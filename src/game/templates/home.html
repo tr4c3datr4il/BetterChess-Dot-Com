@@ -1,3 +1,11 @@
+{% if messages %}
+<script>
+    {% for message in messages %}
+    alert("{{ message }}");
+    {% endfor %}
+</script>
+{% endif %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
