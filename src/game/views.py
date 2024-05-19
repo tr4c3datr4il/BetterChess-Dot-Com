@@ -71,10 +71,5 @@ def handle_winner(request, room_name, is_winner):
         scoreboard_entry.losses = F('losses') + 1
 
     scoreboard_entry.save()
-    
-    if is_winner == 'True':
-        messages.info(request, 'You won the game!')
-    else:
-        messages.info(request, 'You lost the game!')
 
     return redirect('home')

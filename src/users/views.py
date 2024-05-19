@@ -4,7 +4,7 @@ from django.db import connection
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import PlayerInfo
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 import hashlib
 
@@ -23,21 +23,41 @@ def profile_view(request):
             
         return render(request, 'profile.html', {'user': user, 'player': PlayerInfo.objects.get(username=request.user)})
 
+
 @login_required
 def edit_profile(request):
     if request.method == 'GET':
-        user = User.objects.get(username=request.user)
-        return render(request, 'edit_profile.html', {'user': user})
+        user = request.user
+        player = PlayerInfo.objects.get(username=user.username)
+        return render(request, 'edit_profile.html', {'user': user, 'player': player})
     elif request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        password = hashlib.md5(password.encode()).hexdigest()
+        confirm_password = request.POST.get('cpassword')
 
-        user = User.objects.get(username=request.user)
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return redirect('edit_profile')
+
+        avatar = request.FILES.get('avatar')
+        if avatar:
+            # Check size of avatar
+            if avatar.size > 2*1024*1024:
+                messages.error(request, 'Image is too large. Must be less than 2MB.')
+                return redirect('edit_profile')
+            
+            player = PlayerInfo.objects.get(username=request.user.username)
+            player.avatar = avatar
+            player.save()
+
+        user = request.user
         user.username = username
         user.email = email
-        user.set_password(password)
+        if password:
+            user.set_password(password)
+            # Update session auth hash without logging out
+            update_session_auth_hash(request, user)
         user.save()
 
         messages.info(request, 'Edit profile successfully!')
@@ -90,6 +110,7 @@ def register_view(request):
             
 @csrf_exempt
 def logout_view(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         logout(request)
+        messages.info(request, 'Logout successfully!')
         return redirect('/users/login')
