@@ -27,8 +27,8 @@ function onDragStart(source, piece, position, orientation) {
 
     if (game.game_over()) return false;
 
-    if ((game.turn === 'w' && piece.search(/^b/) !== -1) ||
-        (game.turn === 'b' && piece.search(/^w/) !== -1)) {
+    if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+        (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
         return false;
     }
 }
@@ -44,7 +44,7 @@ function onDrop(source, target) {
 
             socket.on('can_move', function (data) {
                 //console.log('Get: ' + data);
-                if (data['vaild_turn'] === 'True' && data['color'] === game.turn) {
+                if (data['vaild_turn'] === 'True' && data['color'] === game.turn()) {
                     //console.log("OKE");
                     $can_move = true;
                 } else {
@@ -108,11 +108,11 @@ socket.on('state', function (data) {
     game.load(data.pos);
     board.position(game.fen());
     if (data.which_turn === WHITE) {
-        game.turn = WHITE;
+        game.turn(WHITE);
     } else {
-        game.turn = BLACK;
+        game.turn(BLACK);
     }
-    console.log(`Turn: ${game.turn}`)
+    console.log(`Turn: ${game.turn()}`)
     updateStatus()
 });
 
