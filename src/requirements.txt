@@ -1,3 +1,4 @@
+python-dotenv
 django==5.0.6
 mysqlclient
 # django-allauth==0.61.1

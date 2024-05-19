@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,6 +37,9 @@ LOGIN_URL = '/users/login'
 LOGIN_REDIRECT_URL = '/users/profile'
 LOGOUT_REDIRECT_URL = '/users/login'
 
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE' : [
@@ -41,8 +47,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'email'
         ],
         'APP': {
-                'client_id': "275980311515-19hhtadepja6o98ps4p7r9gr9ol6ntbn.apps.googleusercontent.com",
-                'secret': "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",
+                'client_id': CLIENT_ID,
+                'secret': CLIENT_SECRET,
                 'key':''
         },
         'AUTH_PARAMS': {
@@ -182,8 +188,8 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_BEAT_SCHEDULE = {
     'delete_old_rooms': {
         'task': 'better_chess.tasks.delete_old_rooms',
@@ -191,18 +197,22 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_HEADERS = [ "accept", "referer", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "x-csrftoken", "x-sessionid", "x-requested-with"]
 CORS_EXPOSE_HEADERS = ['Set-Cookie']
-CSRF_TRUSTED_ORIGINS = ['https://hen-immune-safely.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = [
+    'https://hen-immune-safely.ngrok-free.app',
+    'https://my-bestsite-ever.xyz'
+]
 
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 ACCOUNT_SIGNUP_PASSWORD_VERIFICATION = False
-SOCIALACCOUNT_LOGIN_ON_GET=True
+SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
 JS_URL = '/js/'

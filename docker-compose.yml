@@ -45,7 +45,6 @@ services:
     image: "redis:alpine"
     ports:
       - "6379:6379"
-
   celery:
     build:
       context: ./src
@@ -54,7 +53,6 @@ services:
     depends_on:
       - better_chess
       - redis
-
   celery-beat:
     build:
       context: ./src

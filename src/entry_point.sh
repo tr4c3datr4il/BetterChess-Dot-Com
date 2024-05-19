@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-python manage.py migrate flush
 python manage.py migrate --run-syncdb
 python manage.py makemigrations
 python manage.py migrate
