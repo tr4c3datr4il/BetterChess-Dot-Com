@@ -21,7 +21,7 @@ Then you can access the app at http://localhost:9521
 
 You can change the port at docker-compose.yml
 
-# Languague & Techs & Framework
+# Language & Techs & Framework
 - **Language:** Python + JavaScript
 - **Proxy:** Varnish Configuration Language, Nginx
 - Django Framework
