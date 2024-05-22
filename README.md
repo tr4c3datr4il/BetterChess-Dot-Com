@@ -24,6 +24,7 @@ You can change the port at docker-compose.yml
 # Language & Techs & Framework
 - **Language:** Python + JavaScript
 - **Proxy:** Varnish Configuration Language, Nginx
+- **Database:** InnoDB
 - Django Framework
 - Flask Framework
 - Docker
