@@ -19,9 +19,8 @@ def scoreboard(request):
 
 @login_required
 def home(request):
-    scoreboard = Scoreboard.objects.all()
-    rooms = Room.objects.all()
-    return render(request, "home.html", {"scoreboard": scoreboard, "rooms": rooms})
+    scoreboard = Scoreboard.objects.all().order_by('-player__ELO')[:10]
+    return render(request, "home.html", {"scoreboard": scoreboard})
 
 @login_required
 def available_rooms(request):
