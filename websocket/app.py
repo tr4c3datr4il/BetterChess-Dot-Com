@@ -231,6 +231,10 @@ def on_join_mul(data):
     logging.debug(f"Player {request.sid} joined room {room_name}")
     games[room_name].add_player(request.sid, color)
 
+    # Emit the number of players in the game to all clients
+    players_joined = len(games[room_name].players)
+    socketio.emit('players_joined_update', players_joined)
+
     emit('set_color', games[room_name].players[request.sid], room=request.sid)
     emit('state', games[room_name].get_player_state(
         request.sid), room=request.sid)

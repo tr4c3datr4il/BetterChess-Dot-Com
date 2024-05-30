@@ -65,7 +65,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-top: 20px;
-            margin-bottom: 20px;
         }
 
         .mission-card h3,
@@ -85,6 +84,12 @@
 
         .table th {
             font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            .jumbotron, .mission-card, .scoreboard {
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
@@ -112,7 +117,7 @@
 
     <div class="container mt-4">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 mb-4">
                 <div class="jumbotron">
                     <div class="button-container">
                         <button class="btn btn-primary btn-lg" id="playerBtn">Play 1v1</button>
@@ -120,14 +125,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mb-4">
                 <div class="mission-card">
                     <h3>Daily Mission</h3>
                     <p>Complete today's mission to earn rewards!</p>
                 </div>
                 <div class="scoreboard">
                     <h3>Scoreboard</h3>
-                    <table>
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>Rank</th>
@@ -171,3 +176,4 @@
     </script>
 </body>
 </html>
+

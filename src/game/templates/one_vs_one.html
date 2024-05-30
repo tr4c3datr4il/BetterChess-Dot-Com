@@ -17,10 +17,10 @@
             background-color: #222;
         }
 
-        .container {
+        .main-container {
             display: flex;
-            flex-direction: row;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
             width: 80%;
             max-width: 800px;
             background-color: #ffffff;
@@ -29,52 +29,62 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        #timerContainer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        #timer {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: "Intel One Mono", monospace;
+        }
+
         #myBoard {
-            width: 70%;
+            width: 100%;
             max-width: 600px;
-            margin-right: 20px;
+            margin-bottom: 20px;
         }
 
         #status {
-            margin-top: auto;
-            margin-bottom: 10px;
             font-weight: bold;
             color: #333;
+            margin-bottom: 10px;
         }
 
         #pgn {
-            flex-grow: 1;
-            /* Allow PGN to take remaining space */
-            overflow-wrap: break-word;
             background-color: #f9f9f9;
             padding: 10px;
             border-radius: 4px;
             font-family: Intel One Mono, monospace;
-        }
-
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #555;
-            /* Slightly darker label color */
-            text-align: right;
-            /* Align the label to the right */
+            overflow-wrap: break-word;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="main-container">
+        <!-- Timer -->
+        <div id="timerContainer">
+            <div id="timerWhite"></div>
+            <div id="timerBlack"></div>
+        </div>
         <div id="myBoard"></div>
         <div>
             <div id="status">Game Status: In Progress</div>
+            <label for="pgn">Move History:</label>
+            <div id="moveHistory"></div>
         </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"
         integrity="sha512-zoJXRvW2gC8Z0Xo3lBbao5+AS3g6YWr5ztKqaicua11xHo+AvE1b0lT9ODgrHTmNUxeCw0Ry4BGRYZfXu70weg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer">
-        </script>
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         var $player_name = "{{ player_name }}";
         var $roomName = "{{ room_name }}";

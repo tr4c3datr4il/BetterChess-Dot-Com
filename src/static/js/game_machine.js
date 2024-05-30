@@ -1,6 +1,3 @@
-// sorry for the spaghetti
-
-// const moveSnd = new Audio("/mp3/move.mp3");
 var socket = io('/', { transports: ['websocket'] });
 
 let state = {}, hovering = [], chat = [];
@@ -74,8 +71,8 @@ function read_pgn(options) {
     /* are there any other leftover moves? */
     if (move_string.length) {
       moves.push(move_string);
-    }
-
+    }  
+    
     /* is there a result? */
     if (typeof header.Result !== 'undefined') {
       moves.push(header.Result);
@@ -110,7 +107,7 @@ function read_pgn(options) {
     }
 
     return result.join('');
-  }
+}
 
 socket.on('connect', () => {
     console.log("connected");
@@ -120,14 +117,30 @@ socket.on('disconnect', () => {
     chat.push({ name: "System", msg: "Lost connection to the game server, please restart" })
 });
 
+var moveHistory = [];
+var previousState = null;
 socket.on('state', (data) => {
     state = data;
     board.position(state.pos, true);
-    // moveSnd.play();
+    
+    if (previousState !== null) {
+      var previousBoard = parseFEN(previousState.pos);
+      var currentBoard = parseFEN(state.pos);
+
+      var move_ = findMove(previousBoard, currentBoard);
+      moveHistory.push(move_);
+    }
+
+    previousState = state;
+
     $(".navbar").attr("class", "navbar navbar-expand-md " + (state.your_turn ? "bg-primary" : "bg-danger"));
     $("#turn").text(`${state.your_turn ? "Your" : "Computer"} Turn (${state.turn_counter})`);
     $(".row-5277c > div").css("background", "");
     
+    var moveHistoryElement = document.getElementById('moveHistory');
+    var moveHistoryText = moveHistory.join(', ');
+    moveHistoryElement.textContent = moveHistoryText;
+
     if (data.status !== "running") {
         setTimeout(() => {
             $(".navbar").attr("class", "navbar navbar-expand-md bg-info");
@@ -151,6 +164,55 @@ socket.on('state', (data) => {
         }, 500);
     }
 });
+
+function parseFEN(fen) {
+  var parts = fen.split(' ');
+  var position = parts[0];
+  var rows = position.split('/');
+  var board = rows.map(row => {
+      var rowArray = [];
+
+      for (var i = 0; i < row.length; i++) {
+          var char = row[i];
+
+          if (!isNaN(char)) {
+              for (var j = 0; j < parseInt(char); j++) {
+                  rowArray.push(null);
+              }
+          } else {
+              rowArray.push(char);
+          }
+      }
+
+      return rowArray;
+  });
+
+  return board;
+}
+
+function findMove(previousBoard, currentBoard) {
+  var move = { from: null, to: null };
+
+  for (var i = 0; i < 8; i++) {
+      for (var j = 0; j < 8; j++) {
+          if (previousBoard[i][j] !== currentBoard[i][j]) {
+              if (previousBoard[i][j] !== null) {
+                  move.from = { row: i, col: j };
+              }
+
+              if (currentBoard[i][j] !== null) {
+                  move.to = { row: i, col: j };
+              }
+          }
+      }
+  }
+
+  var columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  move.from = columns[move.from.col] + (8 - move.from.row);
+  move.to = columns[move.to.col] + (8 - move.to.row);
+
+  return move.from + '-' + move.to;
+}
 
 const PIECE_SYMBOLS = {
     "r": "♖", "R": "♜",

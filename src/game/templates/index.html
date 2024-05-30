@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
     <title>Better Chess.com</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,33 +19,27 @@
         }
 
         .container {
-            padding: 64px;
+            padding: 16px;
         }
 
-        .row:after {
+        .row::after {
             content: "";
             display: table;
-            clear: both
+            clear: both;
         }
 
-        .column-66 {
-            float: left;
-            width: 66.66666%;
-            padding: 20px;
-        }
-
+        .column-66,
         .column-33 {
-            float: left;
-            width: 33.33333%;
-            padding: 20px;
+            width: 100%;
+            padding: 16px;
         }
 
         .large-font {
-            font-size: 48px;
+            font-size: 36px;
         }
 
         .xlarge-font {
-            font-size: 64px
+            font-size: 48px;
         }
 
         img {
@@ -71,10 +65,32 @@
             overflow: hidden;
             background-color: #333;
         }
+
+        @media (min-width: 600px) {
+            .column-66 {
+                float: left;
+                width: 66.66666%;
+            }
+
+            .column-33 {
+                float: left;
+                width: 33.33333%;
+            }
+
+            .large-font {
+                font-size: 48px;
+            }
+
+            .xlarge-font {
+                font-size: 64px;
+            }
+
+            .container {
+                padding: 64px;
+            }
+        }
     </style>
 </head>
-
-
 <body>
     <div class="w3-card-4">
         <div class="w3-container w3-theme w3-card">
@@ -87,12 +103,11 @@
         <div class="row">
             <div class="column-66">
                 <h1 class="xlarge-font"><b>Welcome to </b><br><b>Better Chess.com</b></h1>
-                <p><span style="font-size:36px; color:#14beed;">Play chess with your friends, or against the AI!</span>
-                </p>
+                <p><span style="font-size:24px; color:#14beed;">Play chess with your friends, or against the AI!</span></p>
                 <button class="button" onclick="window.location.href='/users/register'">Register Now!</button>
             </div>
             <div class="column-33">
-                <img src="/img/chess1.jpg">
+                <img src="{% static 'img/chess1.jpg' %}" alt="Chess Image">
             </div>
         </div>
     </div>
@@ -101,7 +116,7 @@
     <div class="container" style="background-color:#f1f1f1">
         <div class="row">
             <div class="column-33">
-                <img src="/img/chess2.jpg">
+                <img src="{% static 'img/chess2.jpg' %}" alt="Chess Image">
             </div>
             <div class="column-66">
                 <h1 class="xlarge-font"><b>Compete</b></h1>
@@ -112,3 +127,4 @@
         </div>
     </div>
 </body>
+</html>

@@ -4,8 +4,8 @@ services:
       context: ./proxy
       dockerfile: Dockerfile
     ports:
-      # - "80:80"
-      - "127.0.0.1:9521:80"
+      - "80:80"
+      # - "127.0.0.1:9521:80"
     depends_on:
       - websocket
       - better_chess
