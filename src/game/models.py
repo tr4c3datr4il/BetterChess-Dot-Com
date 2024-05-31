@@ -15,6 +15,8 @@ class Room(models.Model):
     name = models.CharField(max_length=100, unique=True)
     players = models.ManyToManyField(User, related_name='rooms')
     created_at = models.DateTimeField(auto_now_add=True)
+    board_state = models.TextField(default='')
+    move_history = models.TextField(default='')
 
     def __str__(self):
         return self.name

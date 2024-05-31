@@ -119,7 +119,12 @@
             {% for room in rooms %}
                 <li>
                     <span>{{ room.name }} - {{ room.player_count }} players</span>
-                    <button class="btn btn-success" onclick="window.location.href='/one_vs_one/{{ room.name }}'">Connect</button>
+                    <div>
+                        <button class="btn btn-info" onclick="window.location.href='/view_room/{{ room.name }}'">View</button>
+                        {% if room.player_count < 2 %}
+                            <button class="btn btn-success" onclick="window.location.href='/one_vs_one/{{ room.name }}'">Connect</button>
+                        {% endif %}
+                    </div>
                 </li>
             {% empty %}
                 <li>No rooms available at the moment.</li>

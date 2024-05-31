@@ -149,6 +149,22 @@ socket.on('state', function (data) {
         var move_ = findMove(previousBoard, currentBoard);
         if (move_) {
             moveHistory.push(move_);
+            // Send the move to the endpoint /view_room/<room_name>
+            $.ajax({
+                type: 'POST',
+                url: "/view_room/" + $roomName + "/",
+                data: {
+                    'move': move_,
+                    'board_state': data.pos,
+                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+                },
+                // success: function (response) {
+                //     console.log("Move successfully sent:", response);
+                // },
+                error: function (xhr, status, error) {
+                    console.error("Error in sending move:", error);
+                }
+            });
         }
     }
 
@@ -167,6 +183,13 @@ socket.on('state', function (data) {
     var moveHistoryText = moveHistory.join(', ');
     moveHistoryElement.textContent = moveHistoryText;
 });
+
+setInterval(function() {
+    $.get(window.location.href, function(response) {
+        if (response.status === 'success') {
+        }
+    });
+}, 5000);
 
 socket.on('disconnect_mul', function () {
     console.log('Disconnected');

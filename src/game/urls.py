@@ -18,4 +18,5 @@ urlpatterns = [
     path("one_vs_one/<str:room_name>/", views.one_vs_one, name="one_vs_one"),
     path("player_vs_machine", view=views.player_vs_machine, name="player_vs_machine"),
     path("handle_winner/<str:room_name>/<str:is_winner>", view=views.handle_winner, name="handle_winner"),
+    path("view_room/<str:room_name>/", view=views.view_room, name="view_room"),
 ]
