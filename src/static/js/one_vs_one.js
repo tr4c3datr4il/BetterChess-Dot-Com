@@ -55,6 +55,12 @@ var $pgn = $('#pgn')
 const BLACK = 'b';
 const WHITE = 'w';
 
+function handleWithdraw() {
+    getWithdraw(game.turn());
+}
+
+$('#withdrawButton').on('click', handleWithdraw);
+
 function onDragStart(source, piece, position, orientation) {
 
     if (game.game_over()) return false;
@@ -265,6 +271,16 @@ function getWinner(color) {
     }
     counter++;
     socket.emit('get_winner', { room_name: $roomName, color: color });
+}
+
+counter = 0;
+function getWithdraw(color) {
+    if (counter <= 3) {
+        socket.emit('get_withdraw', { room_name: $roomName, color: color });
+        return;
+    }
+    counter++;
+    socket.emit('get_withdraw', { room_name: $roomName, color: color });
 }
 
 function initGame() {

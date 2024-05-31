@@ -63,6 +63,25 @@
             overflow-wrap: break-word;
             margin-bottom: 20px;
         }
+
+        .button {
+            background-color: #14beed;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0fa1cb;
+        }
     </style>
 </head>
 
@@ -76,6 +95,9 @@
         </div>
         <div id="myBoard"></div>
         <div>
+            <div class="button-container">
+                <button class="button" id="withdrawButton">Withdraw</button>
+            </div>
             <div id="status">Game Status: In Progress</div>
             <label for="pgn">Move History:</label>
             <div id="moveHistory"></div>

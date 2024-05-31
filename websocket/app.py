@@ -291,6 +291,26 @@ def onmsg_get_winner(data):
     else:
         logging.error(f"Invalid room name {room_name}")
 
+@socketio.on('get_withdraw')
+def onmsg_get_withdraw(data):
+    room_name = data['room_name']
+    color = data['color'].lower()
+
+    if room_name in games:
+        game = games[room_name]
+        player_sid = request.sid
+        if player_sid in game.players:
+            logging.debug(
+                f"Player {game.players[player_sid]} requested withdraw! {game.players[player_sid]} : {color}")
+
+            result = 'WINNER' if color != game.players[player_sid] else 'LOSER'
+            socketio.emit('winner', result)
+        else:
+            logging.error(
+                f"Invalid player SID {player_sid} for room {room_name}")
+    else:
+        logging.error(f"Invalid room name {room_name}")
+
 
 @socketio.on('move_mul')
 def onmsg_move_mul(data):

@@ -15,15 +15,21 @@ $(document).ready(function() {
     
         if (game.in_checkmate()) {
             status = 'Game over, ' + moveColor + ' is in checkmate.';
+            setTimeout(() => {
+                window.location.href = '/home';
+            }, 5000);
         } else if (game.in_draw()) {
             status = 'Game over, drawn position';
+            setTimeout(() => {
+                window.location.href = '/home';
+            }, 5000);
         } else {
             status = moveColor + ' to move';
             if (game.in_check()) {
                 status += ', ' + moveColor + ' is in check';
             }
         }
-    
+        
         $('#status').html(status);
     }
     
