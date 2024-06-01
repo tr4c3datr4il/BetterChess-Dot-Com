@@ -3,12 +3,15 @@ Yup, this is a Better Chess.com ;D
 
 A simple website for you and your friend can play chess together!
 
+Access the server at: https://my-bestsite-ever.xyz/
+
 ![image](https://github.com/tr4c3datr4il/BetterChess-Dot-Com/assets/31349426/bf31d7fb-ce0b-4ae8-aa3e-b8ed2a1d495c)
 
-# Feature
+# Features
 
 - Multiplayer
 - Play with Stockfish BOT
+- Spectate LIVE matches
 
 # Install and Run
 
